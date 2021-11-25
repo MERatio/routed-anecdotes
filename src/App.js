@@ -6,6 +6,7 @@ import {
   useRouteMatch,
   useHistory,
 } from 'react-router-dom';
+import { useField } from './hooks';
 
 const Menu = () => {
   const padding = {
@@ -54,18 +55,36 @@ const About = () => (
 );
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
-  const [info, setInfo] = useState('');
+  const content = useField('text');
+  const author = useField('text');
+  const info = useField('text');
+
+  const omit = (obj, ...props) => {
+    const newObj = {};
+
+    for (const prop in obj) {
+      if (!props.includes(prop)) {
+        newObj[prop] = obj[prop];
+      }
+    }
+
+    return newObj;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     });
+  };
+
+  const handleResetBtnClick = () => {
+    content.reset();
+    author.reset();
+    info.reset();
   };
 
   return (
@@ -74,29 +93,20 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input {...omit(content, 'reset')} />
         </div>
         <div>
           author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input {...omit(author, 'reset')} />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input {...omit(info, 'reset')} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="button" onClick={handleResetBtnClick}>
+          reset
+        </button>
       </form>
     </div>
   );
