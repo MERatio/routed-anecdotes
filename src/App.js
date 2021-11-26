@@ -59,7 +59,7 @@ const CreateNew = (props) => {
   const author = useField('text');
   const info = useField('text');
 
-  const omit = (obj, ...props) => {
+  const omit = (obj, [props]) => {
     const newObj = {};
 
     for (const prop in obj) {
@@ -93,15 +93,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...omit(content, 'reset')} />
+          <input {...omit(content, ['reset'])} />
         </div>
         <div>
           author
-          <input {...omit(author, 'reset')} />
+          <input {...omit(author, ['reset'])} />
         </div>
         <div>
           url for more info
-          <input {...omit(info, 'reset')} />
+          <input {...omit(info, ['reset'])} />
         </div>
         <button type="submit">create</button>
         <button type="button" onClick={handleResetBtnClick}>
